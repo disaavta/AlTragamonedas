@@ -1,4 +1,5 @@
 import java.time.*;
+import java.util.*;
 
 /**
  * Clase principal que simula un tragamonedas.
@@ -17,6 +18,11 @@ public class Tragamoneda {
     private int rueda3;
 
     /**
+     * variable que representa al jugador
+     */
+    private Jugador jugador;
+
+    /**
      * variabale de tipo entero que almacena la apuesta del jugador
      */
     private int apuesta;
@@ -29,13 +35,61 @@ public class Tragamoneda {
     /**
      * constructor vacio de la clase Tragamonedas
      */
-    public Tragamoneda(int apuestaJugador){
+    public Tragamoneda(){
             this.rueda1=0;
             this.rueda2=0;
             this.rueda3=0;
-            this.apuesta=apuestaJugador;
+            this.apuesta=0;
             this.tiempo= LocalTime.now();
     }
+
+
+    public void iniciar(){
+        //creamos un jugador
+        jugador = new Jugador();
+        //mientras sea verdaderos
+        //creamos un while true para iniciar el juego
+        while (true){
+            //oreguntamos el saldo del jugador
+            //ya que si no tiene dinero debe dejar de jugar
+            if(jugador.getSaldo()==0){
+                //damos el saaludo de salida
+                System.out.println("Muchas Gracias por jugar. Mejor suerte la próxima\n" +
+                        "vez.");
+                //y terminamos el ciclo while
+                break;
+            }//end if
+
+            //en caso que el jugador tenga para apostar
+            System.out.println("Bienvenido al Tragamonedas Ingeniería de SW\n" +
+                    "============================================\n" +
+                    "Su saldo actual es de $1000. ¿Cuánto desea apostar?");
+
+            //preguntamos por la apuesta al jugador
+            apuesta = validar();
+            System.out.println(apuesta);
+            if(apuesta==0){
+                String saludos = saludo();
+                System.out.println(+saludos+", gracias por jugar. Su saldo final es de $"+jugador.getSaldo());
+                //si la apuesta del jugador es 0, debemos terminar el ciclo del jjuego
+                break;
+            }else{//si la apuesta es positiva y mayor a cero, se le debe descontar del saldo al jugador
+                jugador.setSaldo(jugador.getSaldo()-apuesta);
+                //y rodamos las ruedas del tragmonedas
+                int premio = jugar();//obtennemos el premio y se imprimen los valores
+
+                //preguntamos y mostramos le valor del premio
+                if(premio!=0){
+                    System.out.println("Ud. Obtiene $" +premio);
+                    this.jugador.setSaldo(this.jugador.getSaldo()+premio);
+                }
+
+            }
+
+        }//end while
+
+
+    }//end metodo iniciar
 
     /**
      *
@@ -48,6 +102,29 @@ public class Tragamoneda {
         this.rueda1 = (int) (Math.random() * 10) + 1;
         this.rueda1 = (int) (Math.random() * 10) + 1;
         //revisamos que las ruedas de la maquina no tengan asteriscos
+        //se imprimen los valores obtenidos
+        System.out.println("+---+---+---+");
+        System.out.print("| ");
+        if(rueda1==10){
+            System.out.print("*");
+        }else{
+            System.out.print(rueda1);
+        }
+        System.out.print(" | ");
+        if(rueda2==10){
+            System.out.print("*");
+        }else{
+            System.out.print(rueda2);
+        }
+        System.out.print(" | ");
+        if(rueda3==10){
+            System.out.print("*");
+        }else{
+            System.out.print(rueda3);
+        }
+        System.out.print(" |");
+        System.out.print("");
+        System.out.println("+---+---+---+");
 
         //variable auxiliar para guardar la cantidad de asteriscos en caso de que hayan.
         int auxAterisco = asterisco(rueda1,rueda2,rueda3);
@@ -158,4 +235,48 @@ public class Tragamoneda {
         }//end else 1, if comparador de tiempo
     }//end metodo saludo
 
+    /**
+     * metodo que ingresa y valida un numero
+     */
+    public static int validar(){
+        //preguntamos el valor de la apuesta
+        //creamos una variable para retornar el numero de la apuesta
+         int numeroApuetsa=0;
+        Scanner cadena = new Scanner(System.in);
+
+        boolean numeroEntero =isNumeric(cadena);
+        if(numeroEntero != false){
+            numeroApuetsa = Integer.parseInt(cadena);
+            if(numeroApuetsa>jugador.gerSaldo() ){
+                System.out.print("Apustea Superior a su saldo");
+                return validar();
+            }else{
+                if(numeroApuetsa<0){
+                    System.out.print("Apustea negativa, ingrese un valor positivo");
+                    validar();
+                }else{
+                    this.jugador.setApuesta(numeroApuetsa);
+                    return numeroApuetsa;//retornamos el valor
+                }
+            }
+
+        }
+        System.out.println("Ingrese un numero entero");
+        return validar();
+
+    }
+
+    /**
+     * metodo que indica si un valor es un numero
+     * @param cadena
+     * @return
+     */
+    private static boolean isNumeric(String cadena){
+        try {
+            Integer.parseInt(cadena);
+            return true;
+        } catch (NumberFormatException nfe){
+            return false;
+        }
+    }
 }//end TRagamonedas
