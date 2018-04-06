@@ -70,7 +70,7 @@ public class Tragamoneda {
             System.out.println(apuesta);
             if(apuesta==0){
                 String saludos = saludo();
-                System.out.println(+saludos+", gracias por jugar. Su saldo final es de $"+jugador.getSaldo());
+                System.out.println(saludos+", gracias por jugar. Su saldo final es de $"+jugador.getSaldo());
                 //si la apuesta del jugador es 0, debemos terminar el ciclo del jjuego
                 break;
             }else{//si la apuesta es positiva y mayor a cero, se le debe descontar del saldo al jugador
@@ -241,19 +241,19 @@ public class Tragamoneda {
     public static int validar(){
         //preguntamos el valor de la apuesta
         //creamos una variable para retornar el numero de la apuesta
-         int numeroApuetsa=0;
+         int numeroApuesta=0;
         Scanner cadena = new Scanner(System.in);
 
         boolean numeroEntero =isNumeric(cadena);
         if(numeroEntero != false){
-            numeroApuetsa = Integer.parseInt(cadena);
-            if(numeroApuetsa>jugador.gerSaldo() ){
-                System.out.print("Apustea Superior a su saldo");
+            numeroApuesta = Integer.parseInt(cadena);
+            if(numeroApuesta>jugador.getSaldo() ){
+                System.out.println("Apuesta Superior a su saldo");
                 return validar();
             }else{
-                if(numeroApuetsa<0){
-                    System.out.print("Apustea negativa, ingrese un valor positivo");
-                    validar();
+                if(numeroApuesta<0){
+                    System.out.print("Apuesta negativa, ingrese un valor positivo");
+                    return validar();
                 }else{
                     this.jugador.setApuesta(numeroApuetsa);
                     return numeroApuetsa;//retornamos el valor
